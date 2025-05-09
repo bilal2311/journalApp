@@ -1,8 +1,10 @@
 package org.billz.journalapp.controller;
 
+import org.billz.journalapp.api.response.WeatherResponse;
 import org.billz.journalapp.entity.User;
 import org.billz.journalapp.repository.UserRepository;
 import org.billz.journalapp.service.UserService;
+import org.billz.journalapp.service.WeatherService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,8 +24,8 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
-
-
+    @Autowired
+    WeatherService weatherService;
 
 
     @GetMapping("id/{myId}")
@@ -52,5 +54,16 @@ public class UserController {
         Authentication authentication=SecurityContextHolder.getContext().getAuthentication();
         userRepository.deleteByUserName(authentication.getName());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/greeting")
+    public ResponseEntity<?> greeting(){
+        Authentication authentication=SecurityContextHolder.getContext().getAuthentication();
+        WeatherResponse weatherResponse=weatherService.getWeather("Canada");
+        String greeting="";
+        if(weatherResponse!=null){
+            greeting=", weather feels like "+weatherResponse.getCurrent().getFeelslike();
+        }
+        return new ResponseEntity<>("Hi " +authentication.getName() +greeting,HttpStatus.OK);
     }
 }
