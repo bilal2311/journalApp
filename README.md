@@ -56,7 +56,7 @@ The app uses Redis to cache journal data to improve read performance. Common usa
 - `@Cacheable("journals")` on read operations
 - `@CacheEvict(value = "journals", allEntries = true)` on create/update/delete
 
-You must have Redis running locally or remotely. By default, the app connects to `localhost:6379`.
+You must have Redis running locally or remotely
 
 ---
 
